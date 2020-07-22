@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  subscription: 36703df4-4fbc-47bf-a86b-f5e26fa49c3f
+  subscription: Visual Studio Enterprise(36703df4-4fbc-47bf-a86b-f5e26fa49c3f)
   resourceGroup: it-apac
   storageAccount: vmgrsitapac
   container: terraform
