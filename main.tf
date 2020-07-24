@@ -1,21 +1,37 @@
 terraform {
-backend "azurerm" { 
-}
-}
-# Configure the Microsoft Azure Provider
-provider "azurerm" {
-    # The "feature" block is required for AzureRM provider 2.x.
-    # If you're using version 1.x, the "features" block is not allowed.
-    version = "~>2.0"
-    features {}
-}
+   required_version = ">= 0.12.3" 
+  backend "azurerm" {
+   storage_account_name = "__terraformstorageaccount__"
+     container_name       = "terraform"
+     key                  = "terraform.tfstate"
+ 	access_key  ="__storagekey__"
+   features{}
+ 	}
+ 	}
+   provider "azurerm" {
+     version = "=2.0.0"
+ features {}
+ }
+ resource "azurerm_resource_group" "dev" {
+   name     = "PULTerraform"
+   location = "West Europe"
+ }
 
-# Create a resource group if it doesn't exist
-resource "azurerm_resource_group" "rg" {
-    name     = "resourcegroup-test"
-    location = "westeurppoe"
+ resource "azurerm_app_service_plan" "dev" {
+   name                = "__appserviceplan__"
+   location            = "${azurerm_resource_group.dev.location}"
+   resource_group_name = "${azurerm_resource_group.dev.name}"
 
-    tags = {
-        environment = "Terraform Demo"
-    }
-}
+   sku {
+     tier = "Free"
+     size = "F1"
+   }
+ }
+
+ resource "azurerm_app_service" "dev" {
+   name                = "__appservicename__"
+   location            = "${azurerm_resource_group.dev.location}"
+   resource_group_name = "${azurerm_resource_group.dev.name}"
+   app_service_plan_id = "${azurerm_app_service_plan.dev.id}"
+
+ }
